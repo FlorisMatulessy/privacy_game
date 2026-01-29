@@ -1,18 +1,34 @@
 <?php
 require "db.php";
 
+// Verander dit naar de echte login gebruiker
+$currentUserId = 1;
+
+// Alle gebruikers met score en achievements
 $sql = "
 SELECT 
-    u.user_id,
+    u.id AS user_id,
     u.username,
-    MAX(s.value) AS score
+    u.points AS score,
+    u.achievements_unlocked
 FROM users u
-LEFT JOIN score s ON s.user_id = u.user_id
-GROUP BY u.user_id, u.username
-HAVING score IS NOT NULL
 ORDER BY score DESC
 ";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $leaderboard = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Huidige gebruiker ophalen
+$currentUserScore = null;
+$currentUserAchievements = null;
+$currentUsername = null;
+
+foreach ($leaderboard as $row) {
+    if ($row['user_id'] == $currentUserId) {
+        $currentUserScore = $row['score'];
+        $currentUserAchievements = $row['achievements_unlocked'];
+        $currentUsername = $row['username'];
+        break;
+    }
+}

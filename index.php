@@ -1,24 +1,11 @@
 <?php
 require "leaderboard.php";
-
-// tijdelijke test-user (later via login/session)
-$currentUser = "TestUser";
-$myScore = null;
-
-foreach ($leaderboard as $row) {
-    if ($row["username"] === $currentUser) {
-        $myScore = $row["score"];
-        break;
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
   <title>Leaderboard</title>
-
-  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
@@ -51,7 +38,7 @@ foreach ($leaderboard as $row) {
     <button onclick="showTab('leaderboard', this)" class="tab-btn bg-primary text-white px-5 py-2 rounded-full">
       Leaderboard
     </button>
-    <button onclick="showTab('personal', this)" class="tab-btn bg-white px-5 py-2 rounded-full">
+    <button onclick="showTab('personal', this)" class="tab-btn bg-white text-gray-700 px-5 py-2 rounded-full">
       Eigen score
     </button>
   </div>
@@ -71,14 +58,16 @@ foreach ($leaderboard as $row) {
             <th class="text-left py-2">#</th>
             <th class="text-left">Naam</th>
             <th class="text-right">Score</th>
+            <th class="text-right">Achievements</th>
           </tr>
         </thead>
         <tbody>
           <?php foreach ($leaderboard as $index => $user): ?>
-            <tr class="border-b last:border-none <?= $user["username"] === $currentUser ? "bg-soft font-semibold" : "" ?>">
+            <tr class="border-b last:border-none <?= $user["user_id"] == $currentUserId ? "bg-soft font-semibold" : "" ?>">
               <td class="py-3"><?= $index + 1 ?></td>
               <td><?= htmlspecialchars($user["username"]) ?></td>
               <td class="text-right"><?= $user["score"] ?></td>
+              <td class="text-right"><?= $user["achievements_unlocked"] ?></td>
             </tr>
           <?php endforeach; ?>
         </tbody>
@@ -90,16 +79,20 @@ foreach ($leaderboard as $row) {
   <section id="personal" class="tab hidden bg-white p-6 rounded-3xl shadow">
     <h2 class="text-xl font-semibold mb-4">Jouw score</h2>
 
-    <?php if ($myScore === null): ?>
+    <?php if ($currentUserScore === null): ?>
       <p class="text-gray-500">
         Je hebt nog geen score behaald.
       </p>
     <?php else: ?>
       <div class="bg-soft p-5 rounded-2xl">
-        <p class="text-lg font-medium"><?= $currentUser ?></p>
+        <p class="text-lg font-medium"><?= htmlspecialchars($currentUsername) ?></p>
         <p class="mt-2">
           Beste score:
-          <span class="text-primary font-bold text-2xl"><?= $myScore ?></span>
+          <span class="text-primary font-bold text-2xl"><?= $currentUserScore ?></span>
+        </p>
+        <p class="mt-1">
+          Behaalde achievements:
+          <span class="text-primary font-semibold"><?= $currentUserAchievements ?></span>
         </p>
       </div>
     <?php endif; ?>
@@ -112,12 +105,15 @@ function showTab(id, btn) {
   document.querySelectorAll(".tab").forEach(t => t.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 
+  // Buttons updaten
   document.querySelectorAll(".tab-btn").forEach(b => {
     b.classList.remove("bg-primary", "text-white");
-    b.classList.add("bg-white");
+    b.classList.add("bg-white", "text-gray-700");
   });
 
+  // Actieve knop
   btn.classList.add("bg-primary", "text-white");
+  btn.classList.remove("bg-white", "text-gray-700");
 }
 </script>
 
