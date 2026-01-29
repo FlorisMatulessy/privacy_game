@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test React App Load</title>
+</head>
+<body>
+    <h1>Testing React App Assets</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        const results = document.getElementById('test-results');
+        
+        // Test CSS
+        fetch('/react-app/assets/index.css')
+            .then(r => {
+                results.innerHTML += '<p>✅ CSS loads: ' + r.status + '</p>';
+            })
+            .catch(e => {
+                results.innerHTML += '<p>❌ CSS error: ' + e + '</p>';
+            });
+            
+        // Test JS
+        fetch('/react-app/assets/index.js')
+            .then(r => {
+                results.innerHTML += '<p>✅ JS loads: ' + r.status + '</p>';
+            })
+            .catch(e => {
+                results.innerHTML += '<p>❌ JS error: ' + e + '</p>';
+            });
+            
+        // Test main page
+        fetch('/react-app/index.html')
+            .then(r => r.text())
+            .then(html => {
+                results.innerHTML += '<p>✅ index.html loads</p>';
+                results.innerHTML += '<pre>' + html.substring(0, 300) + '...</pre>';
+            })
+            .catch(e => {
+                results.innerHTML += '<p>❌ index.html error: ' + e + '</p>';
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Test</title>
+</head>
+<body>
+    <h1>Login Test</h1>
+    <button onclick="testLogin()">Test Login</button>
+    <pre id="result"></pre>
+
+    <script>
+        async function testLogin() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('http://localhost/react-app/backend/api/login.php', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        username: 'admin', 
+                        password: 'admin123', 
+                        isAdmin: true 
+                    })
+                });
+                
+                const text = await response.text();
+                resultDiv.textContent = 'Raw response:\n' + text;
+                
+                try {
+                    const data = JSON.parse(text);
+                    resultDiv.textContent += '\n\nParsed JSON:\n' + JSON.stringify(data, null, 2);
+                } catch (e) {
+                    resultDiv.textContent += '\n\nJSON Parse Error: ' + e.message;
+                }
+            } catch (error) {
+                resultDiv.textContent = 'Fetch Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

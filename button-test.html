@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Test</title>
+    <style>
+        body { padding: 40px; font-family: Arial; }
+        .info { background: #e3f2fd; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .test-button {
+            background: #1e40af;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .test-button:hover {
+            background: #1e3a8a;
+        }
+        #click-log {
+            background: #f5f5f5;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login Button Test</h1>
+    
+    <div class="info">
+        <h3>Test 1: Simple Button</h3>
+        <button class="test-button" onclick="logClick('Test button clicked!')">Test Button</button>
+    </div>
+    
+    <div class="info">
+        <h3>Test 2: React App in iframe</h3>
+        <p>Open the console (F12) and look at the iframe below. Try clicking the login button.</p>
+        <iframe src="/react-app/" style="width:100%; height:600px; border:2px solid #ccc;"></iframe>
+    </div>
+    
+    <div id="click-log">
+        <strong>Click Log:</strong><br>
+    </div>
+    
+    <script>
+        function logClick(msg) {
+            const log = document.getElementById('click-log');
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `${time}: ${msg}<br>`;
+        }
+        
+        // Monitor iframe
+        const iframe = document.querySelector('iframe');
+        iframe.onload = function() {
+            logClick('Iframe loaded');
+            
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Add click listener to iframe body
+                iframeDoc.body.addEventListener('click', function(e) {
+                    logClick(`Clicked in iframe: ${e.target.tagName} ${e.target.className || ''} ${e.target.textContent?.substring(0, 30) || ''}`);
+                }, true);
+                
+                logClick('Click monitoring active on iframe');
+            } catch (err) {
+                logClick('Cannot monitor iframe clicks (CORS): ' + err.message);
+            }
+        };
+        
+        iframe.onerror = function() {
+            logClick('Iframe failed to load!');
+        };
+    </script>
+</body>
+</html>

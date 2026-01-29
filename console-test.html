@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Console Logger</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+        #console { 
+            background: #000; 
+            color: #0f0; 
+            padding: 15px; 
+            border-radius: 5px; 
+            height: 400px; 
+            overflow-y: auto; 
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .error { color: #f88; }
+        .warn { color: #fa0; }
+        .info { color: #0ff; }
+    </style>
+</head>
+<body>
+    <h2>Live Console Output</h2>
+    <div id="console"></div>
+    <hr>
+    <iframe id="app" src="/react-app/" style="width:100%; height:500px; border:2px solid #666; margin-top:20px;"></iframe>
+    
+    <script>
+        const consoleDiv = document.getElementById('console');
+        const iframe = document.getElementById('app');
+        
+        function log(msg, type = 'info') {
+            const line = document.createElement('div');
+            line.className = type;
+            line.textContent = new Date().toLocaleTimeString() + ' [' + type.toUpperCase() + '] ' + msg;
+            consoleDiv.appendChild(line);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        // Capture iframe console
+        iframe.onload = function() {
+            try {
+                const iframeWindow = iframe.contentWindow;
+                
+                // Override console methods
+                const originalLog = iframeWindow.console.log;
+                const originalError = iframeWindow.console.error;
+                const originalWarn = iframeWindow.console.warn;
+                
+                iframeWindow.console.log = function(...args) {
+                    log(args.join(' '), 'info');
+                    originalLog.apply(iframeWindow.console, args);
+                };
+                
+                iframeWindow.console.error = function(...args) {
+                    log(args.join(' '), 'error');
+                    originalError.apply(iframeWindow.console, args);
+                };
+                
+                iframeWindow.console.warn = function(...args) {
+                    log(args.join(' '), 'warn');
+                    originalWarn.apply(iframeWindow.console, args);
+                };
+                
+                // Capture errors
+                iframeWindow.addEventListener('error', function(e) {
+                    log('ERROR: ' + e.message + ' at ' + e.filename + ':' + e.lineno, 'error');
+                });
+                
+                iframeWindow.addEventListener('unhandledrejection', function(e) {
+                    log('PROMISE REJECTION: ' + e.reason, 'error');
+                });
+                
+                log('Console capture initialized', 'info');
+                
+            } catch (err) {
+                log('Could not capture iframe console (CORS?): ' + err.message, 'error');
+            }
+        };
+        
+        log('Console logger started', 'info');
+    </script>
+</body>
+</html>

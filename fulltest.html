@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        .test { margin: 10px 0; padding: 10px; background: #f0f0f0; }
+        .ok { background: #d4edda; }
+        .error { background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>Asset Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        const results = document.getElementById('results');
+        
+        // Test JS file
+        fetch('/react-app/assets/index.js')
+            .then(r => r.text())
+            .then(t => {
+                const div = document.createElement('div');
+                div.className = 'test ok';
+                div.innerHTML = `✓ JS loaded: ${t.length} bytes<br>Contains "Login": ${t.includes('Login')}<br>Contains "React": ${t.includes('React')}`;
+                results.appendChild(div);
+            })
+            .catch(e => {
+                const div = document.createElement('div');
+                div.className = 'test error';
+                div.innerHTML = `✗ JS error: ${e}`;
+                results.appendChild(div);
+            });
+            
+        // Test CSS file
+        fetch('/react-app/assets/index.css')
+            .then(r => r.text())
+            .then(t => {
+                const div = document.createElement('div');
+                div.className = 'test ok';
+                div.innerHTML = `✓ CSS loaded: ${t.length} bytes`;
+                results.appendChild(div);
+            })
+            .catch(e => {
+                const div = document.createElement('div');
+                div.className = 'test error';
+                div.innerHTML = `✗ CSS error: ${e}`;
+                results.appendChild(div);
+            });
+            
+        // Try to load main page
+        setTimeout(() => {
+            const iframe = document.createElement('iframe');
+            iframe.src = '/react-app/';
+            iframe.style.width = '100%';
+            iframe.style.height = '500px';
+            iframe.style.border = '1px solid #ccc';
+            
+            iframe.onload = () => {
+                const div = document.createElement('div');
+                div.className = 'test ok';
+                div.innerHTML = '✓ Main page loaded in iframe below';
+                results.appendChild(div);
+            };
+            
+            iframe.onerror = () => {
+                const div = document.createElement('div');
+                div.className = 'test error';
+                div.innerHTML = '✗ Failed to load main page';
+                results.appendChild(div);
+            };
+            
+            document.body.appendChild(iframe);
+        }, 1000);
+    </script>
+</body>
+</html>

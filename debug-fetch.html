@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head><title>Debug Fetch</title></head>
+<body>
+    <h2>Testing get_settings.php</h2>
+    <pre id="output"></pre>
+    
+    <script>
+        const output = document.getElementById('output');
+        
+        fetch('http://localhost/react-app/get_settings.php')
+            .then(async response => {
+                output.textContent += 'Status: ' + response.status + '\n';
+                output.textContent += 'Content-Type: ' + response.headers.get('Content-Type') + '\n\n';
+                
+                const text = await response.text();
+                output.textContent += 'Length: ' + text.length + '\n';
+                output.textContent += 'First 500 chars:\n' + text.substring(0, 500) + '\n\n';
+                
+                // Show hex of first 20 bytes
+                const bytes = new TextEncoder().encode(text);
+                output.textContent += 'First 20 bytes (hex): ';
+                for (let i = 0; i < Math.min(20, bytes.length); i++) {
+                    output.textContent += bytes[i].toString(16).padStart(2, '0') + ' ';
+                }
+                output.textContent += '\n\n';
+                
+                try {
+                    const json = JSON.parse(text);
+                    output.textContent += 'JSON parsed OK! Keys: ' + Object.keys(json).join(', ');
+                } catch (e) {
+                    output.textContent += 'JSON PARSE ERROR: ' + e.message;
+                }
+            })
+            .catch(err => {
+                output.textContent += 'FETCH ERROR: ' + err.message;
+            });
+    </script>
+</body>
+</html>

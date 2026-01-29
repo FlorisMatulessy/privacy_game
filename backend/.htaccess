@@ -1,0 +1,26 @@
+# Backend API Directory
+# Allow CORS from frontend
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type"
+
+# Security Headers (uncomment voor productie)
+# Header set X-Content-Type-Options "nosniff"
+# Header set X-Frame-Options "DENY"
+# Header set X-XSS-Protection "1; mode=block"
+# Header set Content-Security-Policy "default-src 'self'"
+# Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+# PHP Settings
+php_flag display_errors Off
+php_flag log_errors On
+php_value error_log /var/log/php_errors.log
+
+# Disable directory listing
+Options -Indexes
+
+# Allow PHP files
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
