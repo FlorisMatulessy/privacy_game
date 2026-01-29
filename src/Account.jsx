@@ -15,7 +15,7 @@ export default function Account({ user, onLogout, onNavigateTo }) {
       return;
     }
 
-    const response = await fetch("http://localhost/react-app/backend/api/change_password.php", {
+    const response = await fetch("http://localhost/react-app/privacy_game/backend/api/change_password.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

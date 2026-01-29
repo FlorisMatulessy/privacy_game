@@ -32,7 +32,7 @@ export default function GameResultsDebug() {
     showMessage("Bezig met opslaan...", "info");
 
     try {
-      const response = await fetch("http://localhost/react-app/backend/api/save_game_results.php", {
+      const response = await fetch("http://localhost/react-app/privacy_game/backend/api/save_game_results.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

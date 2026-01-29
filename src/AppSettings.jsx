@@ -16,8 +16,8 @@ export default function AppSettings({ onBack, userId }) {
     setMessage("");
     
     try {
-      console.log("Fetching settings from: http://localhost/react-app/backend/api/get_settings.php");
-      const response = await fetch("http://localhost/react-app/backend/api/get_settings.php");
+      console.log("Fetching settings from: http://localhost/react-app/privacy_game/backend/api/get_settings.php");
+      const response = await fetch("http://localhost/react-app/privacy_game/backend/api/get_settings.php");
       
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
@@ -75,7 +75,7 @@ export default function AppSettings({ onBack, userId }) {
     }));
 
     try {
-      const response = await fetch("http://localhost/react-app/backend/api/update_settings.php", {
+      const response = await fetch("http://localhost/react-app/privacy_game/backend/api/update_settings.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

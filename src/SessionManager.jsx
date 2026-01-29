@@ -6,7 +6,7 @@ export default function SessionManager({ children, onSessionExpired }) {
 
   useEffect(() => {
     // Fetch inactivity timeout from settings
-    fetch("http://localhost/react-app/backend/api/get_settings.php")
+    fetch("http://localhost/react-app/privacy_game/backend/api/get_settings.php")
       .then(res => {
         console.log('SessionManager fetch response status:', res.status);
         if (!res.ok) {

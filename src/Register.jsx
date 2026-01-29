@@ -29,7 +29,7 @@ export default function Register({ onSwitchToLogin }) {
       return;
     }
 
-    const response = await fetch("http://localhost/react-app/backend/api/register.php", {
+    const response = await fetch("http://localhost/react-app/privacy_game/backend/api/register.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: gebruikersnaam, email: email, password: wachtwoord, department: department }),

@@ -9,7 +9,7 @@ export default function Login({ onLogin, onSwitchToRegister }) {
   const inloggen = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost/react-app/backend/api/login.php", {
+    const response = await fetch("http://localhost/react-app/privacy_game/backend/api/login.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: gebruikersnaam, password: wachtwoord, isAdmin: isAdmin }),

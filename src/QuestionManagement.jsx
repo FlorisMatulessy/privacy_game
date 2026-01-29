@@ -21,7 +21,7 @@ export default function QuestionManagement({ onBack, userId }) {
 
   const fetchQuestions = async () => {
     try {
-      const response = await fetch("http://localhost/react-app/backend/api/get_questions.php");
+      const response = await fetch("http://localhost/react-app/privacy_game/backend/api/get_questions.php");
       const data = await response.json();
       if (data.error) {
         setMessage(data.error);
@@ -49,8 +49,8 @@ export default function QuestionManagement({ onBack, userId }) {
     }
 
     const endpoint = editingQuestion 
-      ? "http://localhost/react-app/backend/api/update_question.php"
-      : "http://localhost/react-app/backend/api/add_question.php";
+      ? "http://localhost/react-app/privacy_game/backend/api/update_question.php"
+      : "http://localhost/react-app/privacy_game/backend/api/add_question.php";
 
     const payload = {
       ...formData,
@@ -83,7 +83,7 @@ export default function QuestionManagement({ onBack, userId }) {
     if (!confirm("Weet je zeker dat je deze vraag wilt verwijderen?")) return;
 
     try {
-      const response = await fetch("http://localhost/react-app/backend/api/delete_question.php", {
+      const response = await fetch("http://localhost/react-app/privacy_game/backend/api/delete_question.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, user_id: userId })

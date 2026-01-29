@@ -35,7 +35,7 @@ export default function DepartmentManagement({ onBack, userId }) {
 
   const fetchDepartments = async () => {
     try {
-      const response = await fetch(`http://localhost/react-app/backend/api/get_department_stats.php?user_id=${userId}`);
+      const response = await fetch(`http://localhost/react-app/privacy_game/backend/api/get_department_stats.php?user_id=${userId}`);
       const data = await response.json();
       if (data.error) {
         console.error(data.error);
@@ -71,7 +71,7 @@ export default function DepartmentManagement({ onBack, userId }) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost/react-app/backend/api/add_department.php', {
+      const response = await fetch('http://localhost/react-app/privacy_game/backend/api/add_department.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

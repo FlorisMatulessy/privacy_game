@@ -14,7 +14,7 @@ export default function Admin({ user, onLogout }) {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch("http://localhost/react-app/backend/api/admin_stats.php");
+      const response = await fetch("http://localhost/react-app/privacy_game/backend/api/admin_stats.php");
       const data = await response.json();
       if (data.error) {
         console.error('Error:', data.error);
