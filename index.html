@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Slice</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Vraag -->
+<div id="question">Placeholder vraag</div>
+
+<!-- Game Over -->
+<div id="gameOver">
+    <div id="resultTitle"></div>
+    <div id="resultScore"></div>
+    <div id="incorrectList"></div>
+    <button onclick="location.reload()">Opnieuw</button>
+    <button id="gameOverHomeBtn" class="home-button-small">← Terug naar home</button>
+</div>
+
+<!-- Startscherm -->
+<div id="startScreen">
+    <header class="screen-header">
+        <div style="display: flex; align-items: center; gap: 20px; width: 100%;">
+            <button id="startHomeBtn" class="home-button-small">← Terug naar home</button>
+            <div id="userDisplay" style="color: #333; font-weight: 600; font-size: 14px;"></div>
+            <button id="logoutBtn" class="home-button-small" style="margin-left: auto; display: none; background: #dc2626;">Logout</button>
+        </div>
+    </header>
+    <div id="startBox">
+        <!-- Links: Persoonlijke Score -->
+        <div class="start-column left-column">
+            <h3>Laatste Score</h3>
+            <div class="score-box">
+                <div class="score-number">80</div>
+                <div class="score-label">punten</div>
+            </div>
+            <div class="stats">
+                <p>Highscore: <strong>100</strong></p>
+            </div>
+        </div>
+
+        <!-- Midden: Spel + Knop -->
+        <div class="start-column middle-column">
+            <h1>Data Slice</h1>
+            <p class="tagline">Verwijder slechte data!</p>
+            <button id="startBtn">Spelen</button>
+        </div>
+
+        <!-- Rechts: Leaderboard -->
+        <div class="start-column right-column">
+            <h3>Leaderboard</h3>
+            <ol class="leaderboard-list">
+                <li><span class="name">Karsten1</span><span class="score">100</span></li>
+                <li><span class="name">Karsten2</span><span class="score">90</span></li>
+                <li><span class="name">Karsten3</span><span class="score">80</span></li>
+                <li><span class="name">Karsten4</span><span class="score">80</span></li>
+                <li><span class="name">Karsten5</span><span class="score">70</span></li>
+            </ol>
+        </div>
+    </div>
+    </header>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
