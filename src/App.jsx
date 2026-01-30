@@ -44,7 +44,7 @@ export default function App() {
     if (currentView === "home" && user) {
       return (
         <SessionManager onSessionExpired={handleSessionExpired}>
-          <Home user={user} onNavigateTo={navigateTo} isAdminMode={isAdminMode} />
+          <Home user={user} onNavigateTo={navigateTo} isAdminMode={isAdminMode} onLogout={handleLogout} />
         </SessionManager>
       );
     }
