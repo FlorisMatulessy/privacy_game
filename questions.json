@@ -1,0 +1,59 @@
+{
+  "antwoordmodelAlgemeneRondes": [
+    {
+      "ronde": "Sociaal Domein",
+      "vragen": [
+        {
+          "vraag": "Frits heeft voor een Wmo-aanvraag persoonsgegevens nodig van mevrouw Van Riet. Frits verwacht dat de WMO-aanvraag tot een positieve beschikking zal leiden en verwacht dan ook dat hij dan weer gegevens van mevrouw moet opvragen. Om administratieve rompslomp te voorkomen vraagt Frits vooraf of mevrouw toestemming wil geven voor het opvragen van haar gegevens bij alle andere afdelingen bij de gemeente. Mag dat?",
+          "answers": {
+            "A": "Nee, toestemming is in dit geval geen geldige grondslag.",
+            "B": "Ja, toestemming kan altijd gegeven worden.",
+            "C": "Ja, mits mevrouw Van Riet akkoord gaat."
+          },
+          "correct": "A",
+          "toelichting": "Bij de uitvoering van publiekrechtelijke taken in het sociaal domein is er meestal een afhankelijkheidsrelatie tussen de betrokkenen en de gemeente. Weigeren mensen toestemming voor het verwerken van gegevens, dan kan dat gevolgen hebben voor een bepaalde voorziening.",
+          "punten": 1
+          
+        },
+
+        {
+          "vraag": "De heer Bos stuurt voor zijn aanvraag voor een gehandicaptenparkeerplaats zijn volledige medische dossier per post op naar de gemeente. Zo kan de gemeente goed zien dat hij die parkeerplaats echt nodig heeft. Wat gaat er niet goed in deze casus?",
+          "answers": {
+            "A": "De gemeente mag medische gegevens verwerken als de burger deze vrijwillig opstuurt.",
+            "B": "Voor de beoordeling van de aanvraag heeft de gemeente het volledige medische dossier niet nodig en mag zij deze gegevens daarom niet gebruiken.",
+            "C": "De gemeente had de medische gegevens digitaal moeten ontvangen in plaats van per post."
+          },
+          "correct": "B",
+          "toelichting": "Volgens het principe van dataminimalisatie uit de AVG mag de gemeente alleen persoonsgegevens verwerken die noodzakelijk zijn voor het doel van de aanvraag. Een volledig medisch dossier is hiervoor niet nodig.",
+          "punten": 1
+          
+        },
+
+        {
+          "vraag": "Is het bouwjaar van een huis een persoonsgegeven?",
+          "answers": {
+            "A": "Ja, want het geeft informatie over de bewoner.",
+            "B": "Nee, het bouwjaar heeft enkel betrekking op het huis en niet op een persoon.",
+            "C": "Soms, afhankelijk van het adres."
+          },
+          "correct": "B",
+          "toelichting": "Het bouwjaar van een huis is geen persoonsgegeven omdat het geen informatie over een identificeerbare persoon bevat.",
+          "punten": 1
+          
+        },
+
+        {
+          "vraag": "Als ik op vakantie ga mag ik mijn werktelefoon altijd meenemen.",
+          "answers": {
+            "A": "Waar, want ik ben verantwoordelijk voor de telefoon.",
+            "B": "Niet waar, er zijn landen waarbij bij aankomst je telefoon wordt aangesloten en alle inhoud wordt gekopieerd.",
+            "C": "Alleen als je manager toestemming geeft."
+          },
+          "correct": "B",
+          "toelichting": "Er zijn landen waar je werktelefoon bij aankomst kan worden gecontroleerd en de inhoud gekopieerd wordt. Neem daarom altijd je werktelefoon mee in overleg met je werkgever.",
+          "punten": 1
+        }
+      ]
+    }
+  ]
+}
