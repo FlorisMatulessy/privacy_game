@@ -12,9 +12,10 @@
           },
           "correct": "A",
           "toelichting": "Bij de uitvoering van publiekrechtelijke taken in het sociaal domein is er meestal een afhankelijkheidsrelatie tussen de betrokkenen en de gemeente. Weigeren mensen toestemming voor het verwerken van gegevens, dan kan dat gevolgen hebben voor een bepaalde voorziening.",
-          "punten": 1,
-          "tijd": 8000
+          "punten": 1
+          
         },
+
         {
           "vraag": "De heer Bos stuurt voor zijn aanvraag voor een gehandicaptenparkeerplaats zijn volledige medische dossier per post op naar de gemeente. Zo kan de gemeente goed zien dat hij die parkeerplaats echt nodig heeft. Wat gaat er niet goed in deze casus?",
           "answers": {
@@ -24,9 +25,10 @@
           },
           "correct": "B",
           "toelichting": "Volgens het principe van dataminimalisatie uit de AVG mag de gemeente alleen persoonsgegevens verwerken die noodzakelijk zijn voor het doel van de aanvraag. Een volledig medisch dossier is hiervoor niet nodig.",
-          "punten": 1,
-          "tijd": 8000
+          "punten": 1
+          
         },
+
         {
           "vraag": "Is het bouwjaar van een huis een persoonsgegeven?",
           "answers": {
@@ -36,9 +38,10 @@
           },
           "correct": "B",
           "toelichting": "Het bouwjaar van een huis is geen persoonsgegeven omdat het geen informatie over een identificeerbare persoon bevat.",
-          "punten": 1,
-          "tijd": 8000
+          "punten": 1
+          
         },
+
         {
           "vraag": "Als ik op vakantie ga mag ik mijn werktelefoon altijd meenemen.",
           "answers": {
@@ -48,8 +51,7 @@
           },
           "correct": "B",
           "toelichting": "Er zijn landen waar je werktelefoon bij aankomst kan worden gecontroleerd en de inhoud gekopieerd wordt. Neem daarom altijd je werktelefoon mee in overleg met je werkgever.",
-          "punten": 1,
-          "tijd": 8000
+          "punten": 1
         }
       ]
     }

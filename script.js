@@ -23,7 +23,7 @@ const questionNumberEl = document.getElementById("questionNumber");
 const totalQuestionsEl = document.getElementById("totalQuestions");
 
 // Vaste X-posities voor A/B/C zodat bubbels niet overlappen
-const BUBBLE_X_POSITIONS = [150, 350, 550];
+const BUBBLE_X_POSITIONS = [150, 700, 900];
 
 // Local Storage keys
 const STORAGE_KEY = "dataslice_stats";
@@ -79,10 +79,10 @@ async function loadQuestions() {
         DATA_CONFIG[nummer] = {
           vraag: vraag.vraag,
           answers: vraag.answers,
-          correct: vraag.correct,
+          correct: vraag.correct, // Dit is de correcte letter (A, B, of C)
           toelichting: vraag.toelichting,
           punten: vraag.punten || 1,
-          tijd: vraag.tijd || 3000 // fallback tijd
+          tijd: vraag.tijd || 3000 // fallback tijd voor feedback display
         };
         nummer++;
       });
@@ -97,6 +97,9 @@ async function loadQuestions() {
     const loadingStatus = document.getElementById("loadingStatus");
     loadingStatus.textContent = `${totalQuestions} vragen geladen!`;
     loadingStatus.style.color = "#36773f";
+
+    console.log("Vragen geladen:", totalQuestions);
+    console.log("Voorbeeld vraag 1:", DATA_CONFIG[1]);
 
   } catch (err) {
     console.error("Kan questions.json niet laden", err);
@@ -151,6 +154,8 @@ function showQuestion() {
       </div>
     </div>
   `;
+
+  console.log(`Vraag ${currentIndex} - Correct antwoord: ${data.correct}`);
 }
 
 // ABC bubbels spawnen
@@ -182,43 +187,57 @@ function spawnItem(letter, index) {
 
   // Gebruik vaste X-positie zodat bubbels niet overlappen
   const x = BUBBLE_X_POSITIONS[index % BUBBLE_X_POSITIONS.length];
-  const y = window.innerHeight + 150;
+  const startY = window.innerHeight + 150;
 
   div.style.left = x + "px";
-  div.style.top = y + "px";
+  div.style.top = startY + "px";
 
   document.body.appendChild(div);
 
   const item = {
     el: div,
-    letter,
-    y,
-    vy: -(0.6 + Math.random() * 0.4), // Snelheid variatie
+    letter: letter, // A, B, of C
+    y: startY,
     removed: false
   };
 
   activeAnswers.push(item);
 
+  // Click handler voor het klikken op de bubbel
   div.addEventListener("click", () => handleClick(item));
 
-  function move() {
+  // Beweg de bubbel op basis van tijd zodat het precies 10s duurt
+  const qRect = questionBox.getBoundingClientRect();
+  const targetY = qRect.bottom - div.offsetHeight; // wanneer de top van de bubbel de onderkant van de vraagbox bereikt
+  const duration = 10000; // 10 seconden in ms
+  let startTime = null;
+
+  function move(timestamp) {
     if (!gameRunning || item.removed) return;
-    
-    item.y += item.vy;
+    if (!startTime) startTime = timestamp;
+
+    const elapsed = timestamp - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+
+    // Lineaire interpolatie tussen startY en targetY
+    item.y = startY + (targetY - startY) * progress;
     div.style.top = item.y + "px";
 
-    // Als bubbel uit beeld gaat
-    if (item.y < -200) {
+    // Als bubbel de hoogte van de vraagbox bereikt of de tijd om is
+    if (progress >= 1 || div.getBoundingClientRect().top <= targetY) {
       if (!item.removed) {
         item.removed = true;
-        // Markeer als gemist
+        // Stop andere bubbels
+        activeAnswers.forEach(i => { if (!i.removed) i.removed = true; });
         showMissedFeedback();
       }
-    } else {
-      requestAnimationFrame(move);
+      return;
     }
+
+    requestAnimationFrame(move);
   }
-  move();
+
+  requestAnimationFrame(move);
 }
 
 // Als alle bubbels gemist zijn
@@ -242,24 +261,28 @@ function showMissedFeedback() {
   }, 3000);
 }
 
-// Klik op bubbel
+// Klik op bubbel - CHECK ANTWOORD TEGEN QUESTIONS.JSON
 function handleClick(item) {
   if (item.removed || !gameRunning) return;
   item.removed = true;
 
   const data = DATA_CONFIG[currentIndex];
+  
+  // BELANGRIJK: Check of de geklikte letter (A, B, of C) overeenkomt met het correcte antwoord
   const isCorrect = item.letter === data.correct;
 
-  // Update score
+  console.log(`Geklikte bubbel: ${item.letter}, Correct antwoord: ${data.correct}, Is correct: ${isCorrect}`);
+
+  // Update score alleen als het antwoord correct is
   if (isCorrect) {
     correctCount += data.punten;
     updateScoreDisplay();
   }
 
-  // Visual feedback
+  // Visual feedback op de bubbel zelf
   item.el.classList.add(isCorrect ? "correct" : "incorrect");
 
-  // Show feedback
+  // Toon feedback in de vraagbox
   questionBox.innerHTML = `
     <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
       <p class="feedback-status">${isCorrect ? '✓ Correct!' : '✗ Fout'}</p>
@@ -272,12 +295,12 @@ function handleClick(item) {
     </div>
   `;
 
-  // Mark other bubbles as removed to stop checking
+  // Stop alle andere bubbels
   activeAnswers.forEach(i => {
     if (i !== item) i.removed = true;
   });
 
-  // Gebruik de tijd van de vraag
+  // Gebruik de tijd van de vraag voor hoelang de feedback getoond wordt
   setTimeout(() => {
     removeAnswers();
     nextQuestion();
@@ -358,11 +381,11 @@ function endGame() {
 // ===== HOME BUTTON HANDLERS =====
 
 document.getElementById("startHomeBtn").addEventListener("click", () => {
-  window.location.href = "/"; // Of jouw home URL
+  window.location.href = "index.html"; // Terug naar startscherm
 });
 
 document.getElementById("gameOverHomeBtn").addEventListener("click", () => {
-  window.location.href = "/"; // Of jouw home URL
+  window.location.href = "index.html"; // Terug naar startscherm
 });
 
 // ===== INITIALIZATION =====
