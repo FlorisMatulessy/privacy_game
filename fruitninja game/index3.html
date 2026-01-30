@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Slice - Verwijder slechte data!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Game Area -->
+    <div id="gameArea" class="game-container">
+        <div id="gameHeader" class="game-header">
+            <div class="score-display">
+                <span class="score-label">Score:</span>
+                <span id="currentScore" class="score-value">0</span>
+            </div>
+            <div class="question-counter">
+                <span id="questionNumber">1</span> / <span id="totalQuestions">20</span>
+            </div>
+        </div>
+        
+        <div id="question" class="question-box">
+            <p class="question-text">Vraag wordt geladen...</p>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOver" class="screen-overlay">
+        <div class="gameover-container">
+            <h2 id="resultTitle" class="result-title">Spel Afgelopen!</h2>
+            <div class="score-display-large">
+                <div id="resultScore" class="final-score">0</div>
+                <div class="score-label">punten</div>
+            </div>
+            <div id="incorrectList" class="incorrect-summary"></div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="location.reload()">Opnieuw Spelen</button>
+                <button id="gameOverHomeBtn" class="btn btn-secondary">← Terug naar Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="screen-overlay active">
+        <header class="screen-header">
+            <div class="header-content">
+                <button id="startHomeBtn" class="btn btn-link">← Terug naar home</button>
+                <div id="userDisplay" class="user-info"></div>
+                <button id="logoutBtn" class="btn btn-danger" style="display: none;">Logout</button>
+            </div>
+        </header>
+        
+        <div id="startBox" class="start-container">
+            <!-- Personal Score Column -->
+            <div class="start-column left-column">
+                <h3>Jouw Statistieken</h3>
+                <div class="score-box">
+                    <div id="lastScore" class="score-number">--</div> 
+                    <div class="score-label">laatste score</div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Highscore:</span>
+                        <strong id="highScore">--</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Gespeeld:</span>
+                        <strong id="gamesPlayed">0</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Gemiddelde:</span>
+                        <strong id="averageScore">--</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Info & Start Button -->
+            <div class="start-column middle-column">
+                <h1 class="game-title">Data Slice</h1>
+                <p class="tagline">Verwijder slechte data!</p>
+                <p class="game-description">
+                    Klik op de juiste antwoord-bubbel voordat deze uit beeld verdwijnt.
+                    Lees de vraag goed en wees snel!
+                </p>
+                <button id="startBtn" class="btn btn-start" disabled>
+                    <span class="btn-text">Vragen laden...</span>
+                </button>
+                <div id="loadingStatus" class="loading-status"></div>
+            </div>
+
+            <!-- Leaderboard Column -->
+            <div class="start-column right-column">
+                <h3>Leaderboard</h3>
+                <ol id="leaderboardList" class="leaderboard-list">
+                    <li class="loading-item">Leaderboard laden...</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Override home button handlers to work with React iframe
+        function navigateToReactHome() {
+            if (window.parent !== window) {
+                // In iframe - send message to parent
+                window.parent.postMessage({ type: 'navigate', route: 'home' }, '*');
+            } else {
+                // Standalone - navigate directly
+                window.location.href = '../index.html';
+            }
+        }
+
+        // Replace the event listeners
+        document.getElementById("startHomeBtn").addEventListener("click", navigateToReactHome);
+        document.getElementById("gameOverHomeBtn").addEventListener("click", navigateToReactHome);
+    </script>
+</body>
+</html>

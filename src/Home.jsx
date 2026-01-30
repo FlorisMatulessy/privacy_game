@@ -9,7 +9,25 @@ export default function Home({ user, onNavigateTo, isAdminMode, onLogout }) {
       <header>
         <div className="logo">
           <a href="#" onClick={(e) => { e.preventDefault(); }}>
-            <img src="/images/logo.png" alt="Logo" />
+            <img 
+              src="/images/image.png" 
+              alt="Privacy Quest Logo"
+              style={{
+                height: '60px',
+                width: 'auto',
+                objectFit: 'contain',
+                transition: 'transform 0.3s ease, filter 0.3s ease',
+                filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'scale(1.05)';
+                e.target.style.filter = 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15))';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
+                e.target.style.filter = 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))';
+              }}
+            />
           </a>
         </div>
         <button className="btn" onClick={() => window.location.href = 'leaderboard.html'}>
@@ -61,7 +79,13 @@ export default function Home({ user, onNavigateTo, isAdminMode, onLogout }) {
           <div className="circle-item">
             <div className="circle-title">Fruit Ninja</div>
             <div className="circle">
-              <a href="fruitNinja.html">
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigateTo("fruitninja");
+                }}
+              >
                 <img src="/images/fruit.jpg" alt="Fruit Ninja" />
               </a>
             </div>

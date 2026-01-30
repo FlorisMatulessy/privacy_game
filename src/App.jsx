@@ -8,6 +8,7 @@ import Admin from "./Admin";
 import GameResults from "./GameResults";
 import PapersPlease from "./PapersPlease";
 import ConsequencesGame from "./ConsequencesGame";
+import FruitNinjaGame from "./FruitNinjaGame";
 import SessionManager from "./SessionManager";
 
 function AppContent() {
@@ -71,6 +72,17 @@ function AppContent() {
           user ? (
             <SessionManager onSessionExpired={handleSessionExpired}>
               <ConsequencesGame onNavigateTo={navigateTo} />
+            </SessionManager>
+          ) : <Navigate to="/" replace />
+        }
+      />
+
+      <Route
+        path="/fruitninja"
+        element={
+          user ? (
+            <SessionManager onSessionExpired={handleSessionExpired}>
+              <FruitNinjaGame onNavigateTo={navigateTo} />
             </SessionManager>
           ) : <Navigate to="/" replace />
         }
