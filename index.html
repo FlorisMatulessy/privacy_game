@@ -2,67 +2,103 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Data Slice</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Slice - Verwijder slechte data!</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Vraag -->
-<div id="question">Placeholder vraag</div>
-
-<!-- Game Over -->
-<div id="gameOver">
-    <div id="resultTitle"></div>
-    <div id="resultScore"></div>
-    <div id="incorrectList"></div>
-    <button onclick="location.reload()">Opnieuw</button>
-    <button id="gameOverHomeBtn" class="home-button-small">← Terug naar home</button>
-</div>
-
-<!-- Startscherm -->
-<div id="startScreen">
-    <header class="screen-header">
-        <div style="display: flex; align-items: center; gap: 20px; width: 100%;">
-            <button id="startHomeBtn" class="home-button-small">← Terug naar home</button>
-            <div id="userDisplay" style="color: #333; font-weight: 600; font-size: 14px;"></div>
-            <button id="logoutBtn" class="home-button-small" style="margin-left: auto; display: none; background: #dc2626;">Logout</button>
-        </div>
-    </header>
-    <div id="startBox">
-        <!-- Links: Persoonlijke Score -->
-        <div class="start-column left-column">
-            <h3>Laatste Score</h3>
-            <div class="score-box">
-                <div class="score-number">80</div>
-                <div class="score-label">punten</div>
+    <!-- Game Area -->
+    <div id="gameArea" class="game-container">
+        <div id="gameHeader" class="game-header">
+            <div class="score-display">
+                <span class="score-label">Score:</span>
+                <span id="currentScore" class="score-value">0</span>
             </div>
-            <div class="stats">
-                <p>Highscore: <strong>100</strong></p>
+            <div class="question-counter">
+                <span id="questionNumber">1</span> / <span id="totalQuestions">20</span>
             </div>
         </div>
-
-        <!-- Midden: Spel + Knop -->
-        <div class="start-column middle-column">
-            <h1>Data Slice</h1>
-            <p class="tagline">Verwijder slechte data!</p>
-            <button id="startBtn">Spelen</button>
-        </div>
-
-        <!-- Rechts: Leaderboard -->
-        <div class="start-column right-column">
-            <h3>Leaderboard</h3>
-            <ol class="leaderboard-list">
-                <li><span class="name">Karsten1</span><span class="score">100</span></li>
-                <li><span class="name">Karsten2</span><span class="score">90</span></li>
-                <li><span class="name">Karsten3</span><span class="score">80</span></li>
-                <li><span class="name">Karsten4</span><span class="score">80</span></li>
-                <li><span class="name">Karsten5</span><span class="score">70</span></li>
-            </ol>
+        
+        <div id="question" class="question-box">
+            <p class="question-text">Vraag wordt geladen...</p>
         </div>
     </div>
-    </header>
-</div>
 
-<script src="script.js"></script>
+    <!-- Game Over Screen -->
+    <div id="gameOver" class="screen-overlay">
+        <div class="gameover-container">
+            <h2 id="resultTitle" class="result-title">Spel Afgelopen!</h2>
+            <div class="score-display-large">
+                <div id="resultScore" class="final-score">0</div>
+                <div class="score-label">punten</div>
+            </div>
+            <div id="incorrectList" class="incorrect-summary"></div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="location.reload()">Opnieuw Spelen</button>
+                <button id="gameOverHomeBtn" class="btn btn-secondary">← Terug naar Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="screen-overlay active">
+        <header class="screen-header">
+            <div class="header-content">
+                <button id="startHomeBtn" class="btn btn-link">← Terug naar home</button>
+                <div id="userDisplay" class="user-info"></div>
+                <button id="logoutBtn" class="btn btn-danger" style="display: none;">Logout</button>
+            </div>
+        </header>
+        
+        <div id="startBox" class="start-container">
+            <!-- Personal Score Column -->
+            <div class="start-column left-column">
+                <h3>Jouw Statistieken</h3>
+                <div class="score-box">
+                    <div id="lastScore" class="score-number">--</div> 
+                    <div class="score-label">laatste score</div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Highscore:</span>
+                        <strong id="highScore">--</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Gespeeld:</span>
+                        <strong id="gamesPlayed">0</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Gemiddelde:</span>
+                        <strong id="averageScore">--</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Info & Start Button -->
+            <div class="start-column middle-column">
+                <h1 class="game-title">Data Slice</h1>
+                <p class="tagline">Verwijder slechte data!</p>
+                <p class="game-description">
+                    Klik op de juiste antwoord-bubbel voordat deze uit beeld verdwijnt.
+                    Lees de vraag goed en wees snel!
+                </p>
+                <button id="startBtn" class="btn btn-start" disabled>
+                    <span class="btn-text">Vragen laden...</span>
+                </button>
+                <div id="loadingStatus" class="loading-status"></div>
+            </div>
+
+            <!-- Leaderboard Column -->
+            <div class="start-column right-column">
+                <h3>Leaderboard</h3>
+                <ol id="leaderboardList" class="leaderboard-list">
+                    <li class="loading-item">Leaderboard laden...</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
