@@ -1,6 +1,20 @@
 // Database functions
 const API_URL = 'http://localhost:3000/api';
 
+// Navigation helper for React app routes
+function _navigateToReactApp(route) {
+  // Check if we're already in the React app
+  const rootElement = document.getElementById('root');
+  if (rootElement) {
+    // We're in the React app, use history API
+    window.history.pushState({}, '', route);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  } else {
+    // We're in a static HTML page, redirect to React app
+    window.location.href = route;
+  }
+}
+
 async function fetchUserData(id) {
   try {
     const response = await fetch(`${API_URL}/users/${id}`);
@@ -13,7 +27,7 @@ async function fetchUserData(id) {
   }
 }
 
-async function fetchAllUsers() {
+async function _fetchAllUsers() {
   try {
     const response = await fetch(`${API_URL}/users`);
     const data = await response.json();
@@ -24,7 +38,7 @@ async function fetchAllUsers() {
   }
 }
 
-async function createUser(username, email) {
+async function _createUser(username, email) {
   try {
     const response = await fetch(`${API_URL}/users`, {
       method: 'POST',
@@ -71,7 +85,7 @@ function applyTheme(isDark) {
   }
 }
 
-function toggleDarkMode() {
+function _toggleDarkMode() {
   const body = document.body;
   const isDarkMode = body.classList.contains('dark');
   applyTheme(!isDarkMode);

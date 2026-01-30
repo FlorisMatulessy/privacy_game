@@ -1,42 +1,7 @@
-import { useEffect, useState } from 'react'
-import MinigameModal from './components/minigames/MinigameModal'
+import { useState } from 'react';
+import MinigameModal from './components/minigames/MinigameModal';
 
-interface Email {
-  id: number;
-  subject: string;
-  content: string;
-  correctDecision: string;
-  sensitiveData: string[];
-  explanation: string;
-}
-
-interface LeaderboardPlayer {
-  name: string;
-  score: number;
-}
-
-function App() {
-  
-  const [screen, setScreen] = useState("start"); // start | email | results | lose
-  const [emails, setEmails] = useState<Email[]>([]);
-  const [currentEmailIndex, setCurrentEmailIndex] = useState(0);
-  const [highlights, setHighlights] = useState<string[]>([]);
-  const [score, setScore] = useState(0);
-  const [previousScore, setPreviousScore] = useState<number | null>(null);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardPlayer[]>([]);
-
-  // Minigame state
-  const [showMinigame, setShowMinigame] = useState(false);
-  const [pendingDecision, setPendingDecision] = useState<string | null>(null);
-  const [secondChanceGranted, setSecondChanceGranted] = useState(false);
-  const [wrongAnswerAttempt, setWrongAnswerAttempt] = useState(false);
-  const [minigamePlays, setMinigamePlays] = useState(0);
-
-  const MAX_MINIGAME_PLAYS = 2;
-
-  // Mock data
-  useEffect(() => {
-    setEmails([
+const INITIAL_EMAILS = [
       {
         id: 1,
         subject: "Vraag: Lijst met BSN voor aanvragers",
@@ -145,8 +110,24 @@ function App() {
         sensitiveData: ["telefoonnummer", "emailadres"],
         explanation: "Telefoonnummer en e-mailadres zijn persoonsgegevens en mogen niet zomaar gedeeld worden.",
       },
-    ]);
-  }, []);
+];
+
+export default function PapersPlease({ onNavigateTo }) {
+  const [screen, setScreen] = useState("start"); // start | email | results | lose
+  const [emails] = useState(INITIAL_EMAILS);
+  const [currentEmailIndex, setCurrentEmailIndex] = useState(0);
+  const [highlights, setHighlights] = useState([]);
+  const [score, setScore] = useState(0);
+  const [previousScore, setPreviousScore] = useState(null);
+  const [leaderboard, setLeaderboard] = useState([]);
+
+  // Minigame state
+  const [showMinigame, setShowMinigame] = useState(false);
+  const [secondChanceGranted, setSecondChanceGranted] = useState(false);
+  const [wrongAnswerAttempt, setWrongAnswerAttempt] = useState(false);
+  const [minigamePlays, setMinigamePlays] = useState(0);
+
+  const MAX_MINIGAME_PLAYS = 2;
 
   // Fake leaderboard ophalen
   const startGame = async () => {
@@ -169,7 +150,7 @@ function App() {
 
   const currentEmail = emails[currentEmailIndex];
 
-  const toggleHighlight = (phrase: string) => {
+  const toggleHighlight = (phrase) => {
     if (highlights.includes(phrase)) {
       // Verwijder highlight als deze al bestaat
       setHighlights(highlights.filter(h => h !== phrase));
@@ -179,7 +160,7 @@ function App() {
     }
   };
 
-  const submitDecision = (decision: string) => {
+  const submitDecision = (decision) => {
     // Check if this is a wrong answer
     const isCorrect = decision === currentEmail.correctDecision;
 
@@ -191,7 +172,6 @@ function App() {
     
     // If wrong answer and no second chance granted yet, trigger minigame
     if (!isCorrect && !secondChanceGranted && !wrongAnswerAttempt) {
-      setPendingDecision(decision);
       setWrongAnswerAttempt(true);
       setMinigamePlays(prev => prev + 1);
       setShowMinigame(true);
@@ -203,7 +183,7 @@ function App() {
 
     if (decision === currentEmail.correctDecision) points += 10;
 
-    currentEmail.sensitiveData.forEach((sensitive: string) => {
+    currentEmail.sensitiveData.forEach((sensitive) => {
       if (highlights.includes(sensitive)) points += 5;
     });
 
@@ -214,7 +194,6 @@ function App() {
     // Reset minigame state for next question
     setSecondChanceGranted(false);
     setWrongAnswerAttempt(false);
-    setPendingDecision(null);
 
     const nextIndex = currentEmailIndex + 1;
     if (nextIndex >= emails.length) {
@@ -230,7 +209,6 @@ function App() {
     setShowMinigame(false);
     setSecondChanceGranted(true);
     setWrongAnswerAttempt(false);
-    setPendingDecision(null);
     // User stays on the same question for a retry
   };
 
@@ -239,18 +217,19 @@ function App() {
     setHighlights([]);
     setSecondChanceGranted(false);
     setWrongAnswerAttempt(false);
-    setPendingDecision(null);
     setScreen("lose");
   };
 
-  const saveScore = async (finalScore: number) => {
+  const saveScore = async (finalScore) => {
     try {
       await fetch("/api/save-score", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ score: finalScore }),
       });
-    } catch {}
+    } catch {
+      // Ignore save errors - game continues without saving
+    }
   };
 
   const compareScores = () => {
@@ -260,11 +239,33 @@ function App() {
     return "Gelijk gebleven";
   };
 
+  const handleBackToHome = () => {
+    onNavigateTo("home");
+  };
+
+  const handleRestart = () => {
+    setScreen("start");
+    setCurrentEmailIndex(0);
+    setHighlights([]);
+    setScore(0);
+    setShowMinigame(false);
+    setSecondChanceGranted(false);
+    setWrongAnswerAttempt(false);
+    setMinigamePlays(0);
+  };
+
   // ---------------- UI ----------------
 
   if (screen === "start") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-muted gap-8 px-4">
+        <button
+          onClick={handleBackToHome}
+          className="absolute top-4 left-4 px-4 py-2 bg-muted hover:bg-muted/70 text-foreground rounded-lg transition-colors flex items-center gap-2"
+        >
+          ← Terug naar Home
+        </button>
+        
         <div className="text-center">
           <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
             <span className="text-5xl">🔒</span>
@@ -285,6 +286,13 @@ function App() {
   if (screen === "email" && currentEmail) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted p-8">
+        <button
+          onClick={handleBackToHome}
+          className="mb-4 px-4 py-2 bg-muted hover:bg-muted/70 text-foreground rounded-lg transition-colors flex items-center gap-2"
+        >
+          ← Terug naar Home
+        </button>
+        
         <div className="max-w-3xl mx-auto">
           <div className="mb-6 flex justify-between items-center">
             <span className="text-sm text-muted-foreground font-medium">
@@ -315,7 +323,7 @@ function App() {
             
             <div className="border-t border-border pt-4 mt-4">
               <p className="mb-6 leading-relaxed text-foreground">
-                {currentEmail.content.split(" ").map((word: string, i: number) => (
+                {currentEmail.content.split(" ").map((word, i) => (
                   <span
                     key={i}
                     onClick={() => toggleHighlight(word.replace(/[.,!?]/g, ""))}
@@ -373,6 +381,13 @@ function App() {
   if (screen === "results") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted p-8">
+        <button
+          onClick={handleBackToHome}
+          className="mb-4 px-4 py-2 bg-muted hover:bg-muted/70 text-foreground rounded-lg transition-colors flex items-center gap-2"
+        >
+          ← Terug naar Home
+        </button>
+        
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
             <div className="text-7xl mb-4 animate-confetti">🎉</div>
@@ -397,7 +412,7 @@ function App() {
             </div>
             <ul className="space-y-3">
               {leaderboard && leaderboard.length > 0 ? (
-                leaderboard.map((player: LeaderboardPlayer, i: number) => (
+                leaderboard.map((player, i) => (
                   <li key={i} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                     <span className="text-foreground font-medium">
                       <span className="text-primary font-bold mr-2">{i + 1}.</span>
@@ -413,7 +428,7 @@ function App() {
           </div>
 
           <button
-            onClick={() => window.location.reload()}
+            onClick={handleRestart}
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-3"
           >
             <span className="text-2xl">🔄</span>
@@ -427,6 +442,13 @@ function App() {
   if (screen === "lose") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted p-8">
+        <button
+          onClick={handleBackToHome}
+          className="mb-4 px-4 py-2 bg-muted hover:bg-muted/70 text-foreground rounded-lg transition-colors flex items-center gap-2"
+        >
+          ← Terug naar Home
+        </button>
+        
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
             <div className="text-7xl mb-4">😢</div>
@@ -447,7 +469,7 @@ function App() {
           </div>
 
           <button
-            onClick={() => window.location.reload()}
+            onClick={handleRestart}
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-3"
           >
             <span className="text-2xl">🔄</span>
@@ -460,5 +482,3 @@ function App() {
 
   return null;
 }
-
-export default App

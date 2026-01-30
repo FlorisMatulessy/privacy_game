@@ -1,17 +1,6 @@
 import { useState } from 'react';
 
-interface QuizMinigameProps {
-  onComplete: () => void;
-}
-
-interface Question {
-  question: string;
-  options: string[];
-  correctAnswer: number;
-  explanation: string;
-}
-
-const questions: Question[] = [
+const questions = [
   {
     question: 'Wat betekent GDPR?',
     options: [
@@ -47,16 +36,16 @@ const questions: Question[] = [
   }
 ];
 
-function QuizMinigame({ onComplete }: QuizMinigameProps) {
+export default function QuizMinigame({ onComplete }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
   const question = questions[currentQuestion];
 
-  const handleAnswer = (answerIndex: number) => {
+  const handleAnswer = (answerIndex) => {
     if (selectedAnswer !== null) return;
     
     setSelectedAnswer(answerIndex);
@@ -172,6 +161,4 @@ function QuizMinigame({ onComplete }: QuizMinigameProps) {
       )}
     </div>
   );
-};
-
-export default QuizMinigame;
+}

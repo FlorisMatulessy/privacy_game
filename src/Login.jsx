@@ -23,6 +23,17 @@ export default function Login({ onLogin, onSwitchToRegister }) {
     }
   };
 
+  const skipLogin = () => {
+    // Mock user data for testing
+    const mockUser = {
+      id: 999,
+      username: "testuser",
+      email: "test@example.com",
+      role: "user"
+    };
+    onLogin(mockUser, false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary flex items-center justify-center p-4">
       <form className="bg-card p-8 rounded-2xl shadow-xl w-full max-w-md border border-border" onSubmit={inloggen}>
@@ -68,6 +79,14 @@ export default function Login({ onLogin, onSwitchToRegister }) {
           className="w-full bg-primary hover:bg-primary text-primary-foreground font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 mb-4"
         >
           Inloggen
+        </button>
+
+        <button
+          type="button"
+          onClick={skipLogin}
+          className="w-full bg-warning hover:bg-warning/90 text-warning-foreground font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-warning focus:ring-offset-2 mb-4"
+        >
+          🚀 Skip Login (Testing)
         </button>
 
         <div className="text-center">

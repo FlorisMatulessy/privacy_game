@@ -95,7 +95,8 @@
     margin: 0;
     padding: var(--spacing-6);
     font-family: 'Inter', system-ui, sans-serif;
-    antialiased: true;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 

@@ -1,16 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-interface SortingMinigameProps {
-  onComplete: () => void;
-}
-
-interface DataItem {
-  id: string;
-  text: string;
-  isSensitive: boolean;
-}
-
-const allDataItems: DataItem[] = [
+const allDataItems = [
   { id: '1', text: 'Je favoriete kleur', isSensitive: false },
   { id: '2', text: 'Je BSN-nummer', isSensitive: true },
   { id: '3', text: 'Je huisadres', isSensitive: true },
@@ -21,30 +11,17 @@ const allDataItems: DataItem[] = [
   { id: '8', text: 'Je geboortedatum', isSensitive: true },
 ];
 
-function SortingMinigame({ onComplete }: SortingMinigameProps) {
-  const [items, setItems] = useState<DataItem[]>([]);
-  const [sortedItems, setSortedItems] = useState<{ safe: string[]; sensitive: string[] }>({
-    safe: [],
-    sensitive: [],
-  });
-  const [feedback, setFeedback] = useState<{ id: string; correct: boolean } | null>(null);
+const createInitialItems = () => {
+  return [...allDataItems].sort(() => Math.random() - 0.5).slice(0, 6);
+};
+
+export default function SortingMinigame({ onComplete }) {
+  const [items, setItems] = useState(createInitialItems);
+  const [feedback, setFeedback] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
 
-  useEffect(() => {
-    initializeGame();
-  }, []);
-
-  const initializeGame = () => {
-    const shuffled = [...allDataItems].sort(() => Math.random() - 0.5).slice(0, 6);
-    setItems(shuffled);
-    setSortedItems({ safe: [], sensitive: [] });
-    setFeedback(null);
-    setIsComplete(false);
-    setScore({ correct: 0, total: 0 });
-  };
-
-  const handleSort = (item: DataItem, category: 'safe' | 'sensitive') => {
+  const handleSort = (item, category) => {
     const isCorrect = (category === 'sensitive' && item.isSensitive) || 
                       (category === 'safe' && !item.isSensitive);
 
@@ -52,10 +29,6 @@ function SortingMinigame({ onComplete }: SortingMinigameProps) {
     
     setTimeout(() => {
       setItems(items.filter(i => i.id !== item.id));
-      setSortedItems(prev => ({
-        ...prev,
-        [category]: [...prev[category], item.id]
-      }));
       setScore(prev => ({
         correct: prev.correct + (isCorrect ? 1 : 0),
         total: prev.total + 1
@@ -157,5 +130,3 @@ function SortingMinigame({ onComplete }: SortingMinigameProps) {
     </div>
   );
 }
-
-export default SortingMinigame;

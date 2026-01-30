@@ -37,7 +37,7 @@ export default function Home({ user, onNavigateTo, isAdminMode, onLogout }) {
           <div className="circle-item">
             <div className="circle-title">Papers Please</div>
             <div className="circle">
-              <a href="papersPlease.html">
+              <a href="#" onClick={(e) => { e.preventDefault(); onNavigateTo("papers-please"); }}>
                 <img src="/images/papers.jpg" alt="Papers Please" />
               </a>
             </div>

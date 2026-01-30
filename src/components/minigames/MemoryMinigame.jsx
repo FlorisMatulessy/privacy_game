@@ -1,37 +1,25 @@
-import { useState, useEffect } from 'react';
-
-interface MemoryMinigameProps {
-  onComplete: () => void;
-}
+import { useState } from 'react';
 
 const icons = ['🔒', '📧', '🛡️', '👤', '🔑', '📱'];
 
-function MemoryMinigame({ onComplete }: MemoryMinigameProps) {
-  const [cards, setCards] = useState<{ id: number; icon: string; flipped: boolean; matched: boolean }[]>([]);
-  const [flippedCards, setFlippedCards] = useState<number[]>([]);
+const createInitialCards = () => {
+  return [...icons, ...icons]
+    .sort(() => Math.random() - 0.5)
+    .map((icon, index) => ({
+      id: index,
+      icon,
+      flipped: false,
+      matched: false,
+    }));
+};
+
+export default function MemoryMinigame({ onComplete }) {
+  const [cards, setCards] = useState(createInitialCards);
+  const [flippedCards, setFlippedCards] = useState([]);
   const [moves, setMoves] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
-  useEffect(() => {
-    initializeGame();
-  }, []);
-
-  const initializeGame = () => {
-    const shuffledIcons = [...icons, ...icons]
-      .sort(() => Math.random() - 0.5)
-      .map((icon, index) => ({
-        id: index,
-        icon,
-        flipped: false,
-        matched: false,
-      }));
-    setCards(shuffledIcons);
-    setFlippedCards([]);
-    setMoves(0);
-    setIsComplete(false);
-  };
-
-  const handleCardClick = (id: number) => {
+  const handleCardClick = (id) => {
     if (flippedCards.length === 2) return;
     if (cards[id].matched || cards[id].flipped) return;
 
@@ -47,10 +35,13 @@ function MemoryMinigame({ onComplete }: MemoryMinigameProps) {
       
       const [first, second] = newFlipped;
       if (newCards[first].icon === newCards[second].icon) {
-        // Match found
-        newCards[first].matched = true;
-        newCards[second].matched = true;
-        setCards(newCards);
+        // Match found - create new array with updated matched status
+        const updatedCards = newCards.map((card, index) => 
+          index === first || index === second 
+            ? { ...card, matched: true }
+            : card
+        );
+        setCards(updatedCards);
         setFlippedCards([]);
 
         // Check if game is complete
@@ -63,9 +54,11 @@ function MemoryMinigame({ onComplete }: MemoryMinigameProps) {
       } else {
         // No match, flip back after delay
         setTimeout(() => {
-          const resetCards = [...newCards];
-          resetCards[first].flipped = false;
-          resetCards[second].flipped = false;
+          const resetCards = newCards.map((card, index) => 
+            index === first || index === second 
+              ? { ...card, flipped: false }
+              : card
+          );
           setCards(resetCards);
           setFlippedCards([]);
         }, 1000);
@@ -116,5 +109,3 @@ function MemoryMinigame({ onComplete }: MemoryMinigameProps) {
     </div>
   );
 }
-
-export default MemoryMinigame;

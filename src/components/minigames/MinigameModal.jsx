@@ -3,55 +3,41 @@ import MemoryMinigame from './MemoryMinigame';
 import QuizMinigame from './QuizMinigame';
 import SortingMinigame from './SortingMinigame';
 
-interface MinigameModalProps {
-  isOpen: boolean;
-  onSuccess: () => void;
-  onFail: () => void;
-  timeLimit?: number;
-}
-
 const MINIGAME_TIME_LIMIT = 60; // 60 seconds
 
-function MinigameModal({ 
+export default function MinigameModal({ 
   isOpen, 
   onSuccess, 
   onFail,
   timeLimit = MINIGAME_TIME_LIMIT
-}: MinigameModalProps) {
+}) {
+  const [currentMinigameId] = useState(() => {
+    const availableMinigames = ['memory', 'quiz', 'sorting'];
+    return availableMinigames[Math.floor(Math.random() * availableMinigames.length)];
+  });
   const [timeLeft, setTimeLeft] = useState(timeLimit);
-  const [currentMinigameId, setCurrentMinigameId] = useState<string>('');
-
-  useEffect(() => {
-    if (isOpen) {
-      // Pick a random minigame when modal opens
-      const availableMinigames = ['memory', 'quiz', 'sorting'];
-      const selectedGame = availableMinigames[Math.floor(Math.random() * availableMinigames.length)];
-      setCurrentMinigameId(selectedGame);
-      setTimeLeft(timeLimit);
-    }
-  }, [isOpen, timeLimit]);
 
   // Timer effect
   useEffect(() => {
-    if (!isOpen) {
-      setTimeLeft(timeLimit);
-      return;
-    }
+    if (!isOpen) return;
+
+    // Reset time when modal opens
+    let currentTime = timeLimit;
+    setTimeLeft(currentTime);
 
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          // Time's up, fail the minigame
-          clearInterval(timer);
-          onFail();
-          return 0;
-        }
-        return prev - 1;
-      });
+      currentTime -= 1;
+      if (currentTime <= 0) {
+        onFail();
+        setTimeLeft(0);
+      } else {
+        setTimeLeft(currentTime);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isOpen, onFail, timeLimit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, timeLimit]);
 
   if (!isOpen) return null;
 
@@ -139,5 +125,3 @@ function MinigameModal({
     </div>
   );
 }
-
-export default MinigameModal;
