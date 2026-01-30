@@ -3,9 +3,9 @@ import '../style.css';
 export default function Home({ user, onNavigateTo, isAdminMode, onLogout }) {
   console.log('Home component - user object:', user);
   console.log('Home component - username:', user?.username);
-  
+
   return (
-    <div>
+    <div className="homepage-container">
       <header>
         <div className="logo">
           <a href="#" onClick={(e) => { e.preventDefault(); }}>
@@ -46,7 +46,13 @@ export default function Home({ user, onNavigateTo, isAdminMode, onLogout }) {
           <div className="circle-item">
             <div className="circle-title">Consequenties</div>
             <div className="circle">
-              <a href="consequenties.html">
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigateTo("consequenties");
+                }}
+              >
                 <img src="/images/consequenties.jpg" alt="Consequenties" />
               </a>
             </div>
