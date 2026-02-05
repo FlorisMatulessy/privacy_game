@@ -29,10 +29,6 @@ export default function DepartmentManagement({ onBack, userId }) {
   const [formErrors, setFormErrors] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
-
   const fetchDepartments = async () => {
     try {
       const response = await fetch(`http://localhost/react-app/privacy_game/backend/api/get_department_stats.php?user_id=${userId}`);

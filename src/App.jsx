@@ -1,27 +1,31 @@
 import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import Home from "./Home";
 import Account from "./Account";
 import Admin from "./Admin";
 import GameResults from "./GameResults";
+import PapersPlease from "./PapersPlease";
+import ConsequencesGame from "./ConsequencesGame";
+import FruitNinjaGame from "./FruitNinjaGame";
 import SessionManager from "./SessionManager";
 
-export default function App() {
-  const [currentView, setCurrentView] = useState("login"); // "login", "register", "home", "account", "admin", "gameresults"
+function AppContent() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [isAdminMode, setIsAdminMode] = useState(false); // Track if user logged in as admin
+  const [isAdminMode, setIsAdminMode] = useState(false);
 
   const handleLogin = (userData, isAdmin) => {
     setUser(userData);
-    setIsAdminMode(isAdmin && userData.role?.toLowerCase() === 'admin'); // Only true if checked AND user is admin
-    setCurrentView("home");
+    setIsAdminMode(isAdmin && userData.role?.toLowerCase() === 'admin');
+    navigate("/home");
   };
 
   const handleLogout = () => {
     setUser(null);
     setIsAdminMode(false);
-    setCurrentView("login");
+    navigate("/");
   };
 
   const handleSessionExpired = () => {
@@ -31,50 +35,99 @@ export default function App() {
     }
   };
 
-  const switchToRegister = () => setCurrentView("register");
-  const switchToLogin = () => setCurrentView("login");
-  const navigateTo = (view) => setCurrentView(view);
+  const switchToRegister = () => navigate("/register");
+  const switchToLogin = () => navigate("/");
+  const navigateTo = (view) => navigate(`/${view}`);
 
-  // Wrap authenticated views with SessionManager
-  const wrappedContent = () => {
-    if (currentView === "register") {
-      return <Register onSwitchToLogin={switchToLogin} />;
-    }
+  return (
+    <Routes>
+      <Route path="/" element={<Login onSwitchToRegister={switchToRegister} onLogin={handleLogin} />} />
+      <Route path="/register" element={<Register onSwitchToLogin={switchToLogin} />} />
 
-    if (currentView === "home" && user) {
-      return (
-        <SessionManager onSessionExpired={handleSessionExpired}>
-          <Home user={user} onNavigateTo={navigateTo} isAdminMode={isAdminMode} />
-        </SessionManager>
-      );
-    }
+      <Route
+        path="/home"
+        element={
+          user ? (
+            <SessionManager onSessionExpired={handleSessionExpired}>
+              <Home user={user} onNavigateTo={navigateTo} isAdminMode={isAdminMode} onLogout={handleLogout} />
+            </SessionManager>
+          ) : <Navigate to="/" replace />
+        }
+      />
 
-    if (currentView === "gameresults" && user) {
-      return (
-        <SessionManager onSessionExpired={handleSessionExpired}>
-          <GameResults user={user} onLogout={handleLogout} onNavigateTo={navigateTo} />
-        </SessionManager>
-      );
-    }
+      <Route
+        path="/papers-please"
+        element={
+          user ? (
+            <SessionManager onSessionExpired={handleSessionExpired}>
+              <PapersPlease onNavigateTo={navigateTo} />
+            </SessionManager>
+          ) : <Navigate to="/" replace />
+        }
+      />
 
-    if (currentView === "account" && user) {
-      return (
-        <SessionManager onSessionExpired={handleSessionExpired}>
-          <Account user={user} onLogout={handleLogout} onNavigateTo={navigateTo} />
-        </SessionManager>
-      );
-    }
+      <Route
+        path="/consequenties"
+        element={
+          user ? (
+            <SessionManager onSessionExpired={handleSessionExpired}>
+              <ConsequencesGame onNavigateTo={navigateTo} />
+            </SessionManager>
+          ) : <Navigate to="/" replace />
+        }
+      />
 
-    if (currentView === "admin" && user && isAdminMode) {
-      return (
-        <SessionManager onSessionExpired={handleSessionExpired}>
-          <Admin user={user} onLogout={handleLogout} />
-        </SessionManager>
-      );
-    }
+      <Route
+        path="/fruitninja"
+        element={
+          user ? (
+            <SessionManager onSessionExpired={handleSessionExpired}>
+              <FruitNinjaGame onNavigateTo={navigateTo} />
+            </SessionManager>
+          ) : <Navigate to="/" replace />
+        }
+      />
 
-    return <Login onSwitchToRegister={switchToRegister} onLogin={handleLogin} />;
-  };
+      <Route
+        path="/gameresults"
+        element={
+          user ? (
+            <SessionManager onSessionExpired={handleSessionExpired}>
+              <GameResults user={user} onNavigateTo={navigateTo} />
+            </SessionManager>
+          ) : <Navigate to="/" replace />
+        }
+      />
 
-  return wrappedContent();
+      <Route
+        path="/account"
+        element={
+          user ? (
+            <SessionManager onSessionExpired={handleSessionExpired}>
+              <Account user={user} onLogout={handleLogout} onNavigateTo={navigateTo} />
+            </SessionManager>
+          ) : <Navigate to="/" replace />
+        }
+      />
+
+      <Route
+        path="/admin"
+        element={
+          user && isAdminMode ? (
+            <SessionManager onSessionExpired={handleSessionExpired}>
+              <Admin user={user} onLogout={handleLogout} />
+            </SessionManager>
+          ) : <Navigate to="/" replace />
+        }
+      />
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
 }

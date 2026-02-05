@@ -38,7 +38,17 @@ export default function Account({ user, onLogout, onNavigateTo }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary flex items-center justify-center p-4">
       <div className="bg-card p-8 rounded-2xl shadow-xl w-full max-w-md border border-border">
-        <h2 className="text-3xl font-semibold text-center text-foreground mb-6">Account</h2>
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => onNavigateTo("home")}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← Terug
+          </button>
+          <h2 className="text-3xl font-semibold text-foreground">Account</h2>
+          <div className="w-16"></div> {/* Spacer for centering */}
+        </div>
+        
         <p className="text-lg text-card-foreground mb-2">Welkom, {user.username}!</p>
         <p className="text-sm text-muted-foreground mb-2">Email: {user.email || 'Niet ingesteld'}</p>
         <p className="text-sm text-muted-foreground mb-2">Rol: {user.role}</p>

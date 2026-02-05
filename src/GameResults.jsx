@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function GameResults({ user, onLogout, onNavigateTo }) {
+export default function GameResults({ user, onNavigateTo }) {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // "success", "error", "warning"
@@ -24,6 +24,7 @@ export default function GameResults({ user, onLogout, onNavigateTo }) {
   };
 
   // Auto-save resultaten wanneer pagina laadt
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const saveResultsOnMount = async () => {
       try {

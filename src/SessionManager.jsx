@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 
 export default function SessionManager({ children, onSessionExpired }) {
-  const [lastActivity, setLastActivity] = useState(Date.now());
+  const [lastActivity, setLastActivity] = useState(() => Date.now());
   const [inactivityTimeout, setInactivityTimeout] = useState(1800000); // 30 min default
 
   useEffect(() => {
