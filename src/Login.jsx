@@ -80,6 +80,16 @@ export default function Login({ onLogin, onSwitchToRegister }) {
           </button>
         </div>
 
+        <div className="text-center mt-4">
+          <button
+            type="button"
+            onClick={() => onLogin({ username: 'Guest', role: 'user' }, false)}
+            className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium py-3 px-4 rounded-lg transition-colors"
+          >
+            Doorgaan zonder in te loggen
+          </button>
+        </div>
+
         {bericht && (
           <p className={`mt-4 text-center text-sm ${bericht.includes('succes') ? 'text-success' : 'text-destructive'}`}>
             {bericht}
